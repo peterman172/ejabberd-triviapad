@@ -146,21 +146,7 @@ can_use_nick(_Host, _JID, "") ->
     false;
 can_use_nick(Host, JID, Nick) ->
     {LUser, LServer, _} = jlib:jid_tolower(JID),
-    LUS = {LUser, LServer},
-    case catch mnesia:dirty_select(
-		 muc_registered,
-		 [{#muc_registered{us_host = '$1',
-				   nick = Nick,
-				   _ = '_'},
-		   [{'==', {element, 2, '$1'}, Host}],
-		   ['$_']}]) of
-	{'EXIT', _Reason} ->
-	    true;
-	[] ->
-	    true;
-	[#muc_registered{us_host = {U, _Host}}] ->
-	    U == LUS
-    end.
+	LUser == Nick.
 
 %%====================================================================
 %% gen_server callbacks
